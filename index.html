@@ -11,12 +11,14 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Respaldo: si por algo falla el JS, este margen evita que el título quede tapado */
+    section[id^="sec-"] { scroll-margin-top: 96px; } /* ~altura del header */
   </style>
 </head>
 <body class="bg-white text-neutral-900">
 
   <!-- Header -->
-  <header class="sticky top-0 z-40 backdrop-blur bg-white/80 border-b">
+  <header id="siteHeader" class="sticky top-0 z-40 backdrop-blur bg-white/80 border-b">
     <div class="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
       <!-- Logo -->
       <img src="IMG_2292.JPG" alt="Logo Pakeperro" class="w-20 h-20 rounded-xl object-cover bg-white border" />
@@ -246,14 +248,31 @@
       </button>
     `).join("");
 
+    function scrollWithHeaderOffset(targetEl) {
+      if (!targetEl) return;
+      // Altura real del header (dinámica, según dispositivo)
+      const header = document.getElementById("siteHeader");
+      const headerHeight = header ? header.offsetHeight : 96;
+      // Posición absoluta del target
+      const rect = targetEl.getBoundingClientRect();
+      const absoluteTop = rect.top + window.pageYOffset;
+      const offset = 8; // pequeño aire extra
+      const targetY = Math.max(absoluteTop - headerHeight - offset, 0);
+      window.scrollTo({ top: targetY, behavior: "smooth" });
+    }
+
     chips.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-cat]");
       if (!btn) return;
       currentCat = btn.getAttribute("data-cat");
       renderMenu();
+
       if (currentCat !== "all") {
         const el = document.getElementById(`sec-${currentCat}`);
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        // En vez de scrollIntoView (que tapa el título), usamos offset dinámico:
+        scrollWithHeaderOffset(el);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     });
 
@@ -441,13 +460,15 @@
       }
     });
 
-    // Deep-link ?item=
+    // Deep-link ?item= (aplica el offset también)
     (function openFromQuery() {
       const p = new URLSearchParams(window.location.search);
       const itemId = p.get("item");
       if (!itemId) return;
-      const target = MENU.find(x => x.id === itemId);
-      if (target) openModal(target);
+      const target = document.getElementById(`sec-${(MENU.find(x => x.id === itemId)?.category || '')}`);
+      if (target) {
+        scrollWithHeaderOffset(target);
+      }
     })();
 
     // Render inicial
