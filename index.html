@@ -5,18 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pakeperro — Menú</title>
 
-  <!-- Tailwind CDN (rápido para CodePen) -->
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* ocultar scrollbars horizontales feos en chips */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="bg-white text-neutral-900">
 
-  <!-- Header pegajoso -->
+  <!-- Header -->
   <header class="sticky top-0 z-40 backdrop-blur bg-white/80 border-b">
     <div class="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-black text-white flex items-center justify-center text-sm font-bold">PP</div>
@@ -38,11 +37,17 @@
     </div>
   </header>
 
-  <!-- Aviso de copiado -->
+  <!-- Toast -->
   <div id="toastCopied"
        class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-black text-white text-sm px-3 py-1.5 rounded-lg shadow">
     Enlace copiado ✅
   </div>
+
+  <!-- Promos -->
+  <section class="max-w-3xl mx-auto px-4 pt-6">
+    <h2 class="text-lg font-semibold mb-3">Promociones</h2>
+    <div id="promos" class="grid gap-3"></div>
+  </section>
 
   <!-- Contenido -->
   <main id="content" class="max-w-3xl mx-auto px-4 py-6"></main>
@@ -77,79 +82,161 @@
     // =========================
     //   DATOS — EDITA AQUÍ
     // =========================
+
+    // Promos: Miércoles y Jueves (se resalta si hoy coincide)
+    const PROMOS = [
+      {
+        id: "combo-perros-miercoles",
+        day: "Miércoles",
+        weekdayIndex: 3, // 0=Dom,1=Lun,2=Mar,3=Mié,4=Jue,5=Vie,6=Sáb
+        title: "Combo Perros Calientes",
+        description: "2 Perros Calientes Estilo Venezolano + 1 Refresco",
+        price: 10.00
+      },
+      {
+        id: "combo-hamb-jueves",
+        day: "Jueves",
+        weekdayIndex: 4,
+        title: "Combo Hamburguesa Sencilla",
+        description: "1 Hamburguesa Sencilla + 1 Ración de Papas Fritas + 1 Refresco",
+        price: 10.00
+      }
+    ];
+
     const MENU = [
+      // ——— PERROS CALIENTES ———
       {
-        id: "hd-clasico",
-        title: "Perro Clásico",
-        description: "Salchicha estilo venezolano, papitas, salsas Pakeperro.",
-        price: 6.99,
+        id: "perro-venezolano",
+        title: "Perro Caliente Estilo Venezolano",
+        description:
+          "Pan artesanal, salchicha Nathan’s, repollo, cebolla, maíz, tocineta, papitas, tres salsas de la casa y queso amarillo rallado.",
+        price: 5.00,
         category: "hotdogs",
-        tiktok: "https://www.tiktok.com/@tiktok/video/7339022333711111111",
+        tiktok: "",      // Nota: aquí vas a pegar el link de TikTok
+        instagram: ""    // Nota: aquí vas a pegar el video de Instagram
       },
+
+      // ——— HAMBURGUESAS ———
       {
-        id: "hd-criollo",
-        title: "Perro Criollo",
-        description: "Salchicha, repollo, cebolla, papitas, queso rallado y salsas.",
-        price: 8.49,
-        category: "hotdogs",
-        tiktok: "",
-      },
-      {
-        id: "burg-arepera",
-        title: "Hamburguesa Arepera",
-        description: "Carne a la parrilla, queso, tocineta, papitas, reina pepiada.",
-        price: 10.99,
+        id: "hamb-sencilla",
+        title: "Hamburguesa Sencilla",
+        description:
+          "Pan brioche, 2 carnes smashed (mezcla con wagyu), queso americano en cada carne, tocineta, cebolla, repollo, maíz, papitas y salsa de la casa.",
+        price: 10.00,
         category: "burgers",
-        tiktok: "https://www.tiktok.com/@tiktok/video/7339022333711111112",
+        tiktok: "",      // Nota: aquí vas a pegar el link de TikTok
+        instagram: "",   // Nota: aquí vas a pegar el video de Instagram
+        extras: [
+          { id: "extra-carne", label: "Extra carne", price: 2.50 },
+          { id: "extra-huevo", label: "Huevo", price: 2.50 },
+          { id: "extra-queso", label: "Queso adicional", price: 2.50 },
+          { id: "extra-tocineta", label: "Extra tocineta", price: 2.50 }
+        ],
+        upsell_note: "Por $2.50 cada extra — ¡hazla Especial!"
       },
       {
-        id: "beb-maracuya",
-        title: "Jugo de Maracuyá",
-        description: "Natural y bien frío.",
-        price: 3.5,
-        category: "drinks",
-        tiktok: "",
+        id: "hamb-especial",
+        title: "Hamburguesa Especial",
+        description:
+          "Pan brioche, 3 carnes smashed (mezcla con wagyu), 3 quesos, huevo, extra tocineta, cebolla, repollo, maíz, papitas y salsa de la casa.",
+        price: 15.00,
+        category: "burgers",
+        tiktok: "",      // Nota: aquí vas a pegar el link de TikTok
+        instagram: ""    // Nota: aquí vas a pegar el video de Instagram
       },
+
+      // ——— COMPLEMENTOS ———
+      { id: "papas-fritas", title: "Papas fritas", description: "Ración clásica.", price: 5.00, category: "sides", tiktok: "", instagram: "" },
+      { id: "tequenos", title: "Tequeños (5 unidades)", description: "Crujientes y bien rellenos.", price: 5.00, category: "sides", tiktok: "", instagram: "" },
+      { id: "empanaditas", title: "Empanaditas (3 unidades)", description: "Ración de 3.", price: 6.00, category: "sides", tiktok: "", instagram: "" },
       {
-        id: "extra-queso",
-        title: "Extra Queso",
-        description: "Porción adicional de queso rallado.",
-        price: 1.5,
-        category: "extras",
+        id: "papas-queso-tocineta",
+        title: "Papas con queso y tocineta",
+        description: "Queso amarillo rallado, salsa de queso y tocineta.",
+        price: 7.00,
+        category: "sides",
         tiktok: "",
+        instagram: ""
       },
+
+      // ——— BEBIDAS ——— (sin botones de video)
+      { id: "agua", title: "Agua", description: "", price: 1.00, category: "drinks" },
+      { id: "refrescos", title: "Refrescos", description: "", price: 2.50, category: "drinks" },
+      { id: "nestea", title: "Vaso de Nestea", description: "", price: 3.00, category: "drinks" },
+
+      // ——— POSTRES ———
+      {
+        id: "tetas-venezolanas",
+        title: "Tetas venezolanas",
+        description:
+          "Helado artesanal en bolsita plástica anudada (forma cónica), a base de leche o jugos; clásico de la calle venezolana. Sabores ejemplo: Toddy, ron con pasas, coco, colita, batibati, colita con leche, Ferrero.",
+        price: 5.00,
+        category: "desserts",
+        tiktok: "",      // Nota: aquí vas a pegar el link de TikTok
+        instagram: ""    // Nota: aquí vas a pegar el video de Instagram
+      },
+      { id: "tres-leches", title: "Tres leches (porción)", description: "Clásico, húmedo y cremoso.", price: 7.00, category: "desserts", tiktok: "", instagram: "" },
+      {
+        id: "beso-angel",
+        title: "Torta Beso de Ángel (porción)",
+        description: "Torta tres leches con capa de quesillo en el centro y bizcocho superior. Suave, cremosa y con contraste perfecto.",
+        price: 8.00,
+        category: "desserts",
+        tiktok: "",
+        instagram: ""
+      },
+      { id: "torta-chocolate", title: "Torta de chocolate (porción)", description: "Cacao intenso.", price: 7.00, category: "desserts", tiktok: "", instagram: "" },
+      { id: "marquesa", title: "Marquesa (porción)", description: "Galleta y crema fría estilo casero.", price: 7.00, category: "desserts", tiktok: "", instagram: "" }
     ];
 
     const CATEGORIES = [
       { id: "all", label: "Todo" },
-      { id: "hotdogs", label: "Hot Dogs" },
+      { id: "hotdogs", label: "Perros Calientes" },
       { id: "burgers", label: "Hamburguesas" },
+      { id: "sides", label: "Complementos" },
       { id: "drinks", label: "Bebidas" },
-      { id: "extras", label: "Extras" },
+      { id: "desserts", label: "Postres" }
     ];
 
     // =========================
     //   UTILIDADES
     // =========================
     const $ = s => document.querySelector(s);
-    const $$ = s => document.querySelectorAll(s);
-
-    const slugify = s =>
-      s.toLowerCase()
-       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-       .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-
-    function money(n) { return `$${Number(n).toFixed(2)}`; }
+    const money = n => `$${Number(n).toFixed(2)}`;
 
     // =========================
-    //   ESTADO
+    //   PROMOS RENDER
+    // =========================
+    const promosWrap = $("#promos");
+    const todayIndex = new Date().getDay();
+
+    function renderPromos() {
+      promosWrap.innerHTML = PROMOS.map(p => {
+        const active = p.weekdayIndex === todayIndex;
+        return `
+          <article class="rounded-2xl border p-4 flex items-start gap-3 ${active ? 'bg-yellow-50' : ''}">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-xs px-2 py-0.5 rounded-full border">${p.day}</span>
+                ${active ? '<span class="text-[11px] px-2 py-0.5 rounded-full bg-black text-white">HOY</span>' : ''}
+              </div>
+              <h3 class="mt-2 text-base font-bold leading-tight">${p.title}</h3>
+              <p class="text-sm text-neutral-600 mt-1">${p.description}</p>
+            </div>
+            <div class="text-right shrink-0">
+              <div class="text-base font-semibold">${money(p.price)}</div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    // =========================
+    //   MENÚ / CHIPS / SEARCH
     // =========================
     let currentCat = "all";
     let query = "";
 
-    // =========================
-    //   RENDER CHIPS
-    // =========================
     const chips = $("#chips");
     chips.innerHTML = CATEGORIES.map(c => `
       <button data-cat="${c.id}"
@@ -161,19 +248,14 @@
     chips.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-cat]");
       if (!btn) return;
-      const id = btn.getAttribute("data-cat");
-      if (id === "all") {
-        currentCat = "all";
-        render();
-        return;
+      currentCat = btn.getAttribute("data-cat");
+      renderMenu();
+      if (currentCat !== "all") {
+        const el = document.getElementById(`sec-${currentCat}`);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-      currentCat = id;
-      render(true, id); // scroll a esa sección
     });
 
-    // =========================
-    //   RENDER LISTA
-    // =========================
     const content = $("#content");
     function getFiltered() {
       const q = query.trim().toLowerCase();
@@ -181,7 +263,7 @@
         const inCat = currentCat === "all" || m.category === currentCat;
         const inText = !q ||
           m.title.toLowerCase().includes(q) ||
-          m.description.toLowerCase().includes(q);
+          (m.description || "").toLowerCase().includes(q);
         return inCat && inText;
       });
     }
@@ -196,7 +278,7 @@
       return order.map(id => ({ id, items: map[id] || [] }));
     }
 
-    function render(scrollToCat = false, catId = "") {
+    function renderMenu() {
       const grouped = groupByCategory(getFiltered());
       content.innerHTML = grouped.map(group => `
         <section id="sec-${group.id}" class="mb-8">
@@ -210,47 +292,52 @@
                 <article class="rounded-2xl border p-4 flex gap-4">
                   <div class="flex-1 min-w-0">
                     <div class="flex items-start justify-between gap-3">
-                      <h3 class="text-base font-bold leading-tight truncate">${item.title}</h3>
+                      <h3 class="text-base font-bold leading-tight">${item.title}</h3>
                       <div class="text-right shrink-0">
                         <div class="text-base font-semibold">${money(item.price)}</div>
                       </div>
                     </div>
-                    <p class="text-sm text-neutral-600 mt-1">${item.description}</p>
-                    <div class="mt-3 flex gap-2">
-                      ${item.tiktok
-                        ? `<button class="px-3 py-1.5 text-xs rounded-lg border hover:bg-neutral-50"
-                                   data-open="${item.id}">Ver en TikTok</button>`
-                        : `<button disabled class="px-3 py-1.5 text-xs rounded-lg border text-neutral-400"
-                                   title="Sin video">Sin video</button>`
-                      }
-                      <a class="px-3 py-1.5 text-xs rounded-lg border hover:bg-neutral-50"
-                         href="?item=${item.id}">Enlace directo</a>
-                    </div>
+                    <p class="text-sm text-neutral-600 mt-1">${item.description || ""}</p>
+
+                    ${Array.isArray(item.extras) ? `
+                      <div class="mt-2 text-xs text-neutral-600">
+                        <span class="font-semibold">Extras (+$2.50 c/u):</span>
+                        ${item.extras.map(x => x.label).join(" • ")}
+                        ${item.upsell_note ? `<div class="mt-1 text-neutral-500">${item.upsell_note}</div>` : ``}
+                      </div>
+                    ` : ``}
+
+                    ${item.category !== "drinks" ? `
+                      <div class="mt-3 flex flex-col gap-2">
+                        <div class="flex gap-2">
+                          <button class="px-3 py-1.5 text-xs rounded-lg border hover:bg-neutral-50"
+                                  data-open="${item.id}">TikTok</button>
+                          <a class="px-3 py-1.5 text-xs rounded-lg border hover:bg-neutral-50"
+                             ${item.instagram ? `href="${item.instagram}" target="_blank" rel="noreferrer noopener"` : `href="javascript:void(0)"`}
+                          >Instagram</a>
+                        </div>
+                        <div class="text-[11px] text-neutral-500 leading-snug">
+                          ${item.tiktok ? `` : `Nota: aquí vas a pegar el link de TikTok.`}<br/>
+                          ${item.instagram ? `` : `Nota: aquí vas a pegar el video de Instagram.`}
+                        </div>
+                      </div>
+                    ` : ``}
                   </div>
                 </article>
               `).join("")}
           </div>
         </section>
       `).join("");
-
-      if (scrollToCat && catId) {
-        const el = document.getElementById(`sec-${catId}`);
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
     }
 
-    // =========================
-    //   BÚSQUEDA
-    // =========================
+    // Búsqueda
     const searchInput = $("#searchInput");
     searchInput.addEventListener("input", (e) => {
       query = e.target.value || "";
-      render();
+      renderMenu();
     });
 
-    // =========================
-    //   COMPARTIR
-    // =========================
+    // Compartir
     const toast = $("#toastCopied");
     function showToast() {
       toast.classList.remove("hidden");
@@ -271,9 +358,7 @@
       }
     });
 
-    // =========================
-    //   MODAL TIKTOK
-    // =========================
+    // Modal TikTok
     const modal = $("#modal");
     const modalBg = $("#modalBg");
     const modalClose = $("#modalClose");
@@ -284,7 +369,12 @@
     const modalShare = $("#modalShare");
 
     function openModal(item) {
-      // actualizar query ?item=
+      // Si no hay link de TikTok, solo mostramos la nota y no abrimos
+      if (!item.tiktok) {
+        alert("Nota: aquí vas a pegar el link de TikTok.");
+        return;
+      }
+
       const url = new URL(window.location.href);
       url.searchParams.set("item", item.id);
       window.history.pushState({}, "", url);
@@ -312,7 +402,6 @@
     }
 
     function closeModal() {
-      // limpiar ?item=
       const url = new URL(window.location.href);
       url.searchParams.delete("item");
       window.history.pushState({}, "", url);
@@ -351,17 +440,18 @@
       }
     });
 
-    // Abrir modal si viene ?item= en la URL
+    // Deep-link ?item=
     (function openFromQuery() {
       const p = new URLSearchParams(window.location.search);
       const itemId = p.get("item");
       if (!itemId) return;
-      const target = MENU.find(x => x.id === itemId || slugify(x.title) === itemId);
+      const target = MENU.find(x => x.id === itemId);
       if (target) openModal(target);
     })();
 
-    // primer render
-    render();
+    // Render inicial
+    renderPromos();
+    renderMenu();
   </script>
 </body>
 </html>
