@@ -1,1 +1,384 @@
-<!doctype html> <html lang="es"> <head>   <meta charset="utf-8" />   <meta name="viewport" content="width=device-width,initial-scale=1" />   <title>Pakeperr — Menú</title>    <!-- Tailwind CDN -->   <script src="https://cdn.tailwindcss.com"></script>    <!-- Favicon (usa tu imagen local) -->   <link rel="icon" type="image/jpeg" href="IMG_2292.JPG" />   <link rel="apple-touch-icon" href="IMG_2292.JPG" />    <style>     .no-scrollbar::-webkit-scrollbar { display: none; }     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }     /* Respaldo: evita que el título quede tapado al hacer scroll a secciones */     section[id^="sec-"] { scroll-margin-top: 96px; }   </style> </head>  <body class="bg-white text-neutral-900">    <!-- Header -->   <header id="siteHeader" class="sticky top-0 z-40 backdrop-blur bg-white/80 border-b">     <div class="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">       <!-- Logo -->       <img src="IMG_2292.JPG" alt="Logo Pakeperro" class="w-20 h-20 rounded-xl object-cover bg-white border" />       <div class="flex-1">         <h1 class="text-xl font-bold leading-tight">Pakeperro — Menú</h1>         <p class="text-xs text-neutral-500">Rápido, fresco y con mucho sabor</p>       </div>       <button id="shareBtn" class="px-3 py-1.5 text-sm rounded-xl border hover:bg-neutral-50 active:scale-[.98]">         Compartir       </button>     </div>      <!-- Search + chips -->     <div class="max-w-3xl mx-auto px-4 pb-3">       <input id="searchInput" type="text"              placeholder="Buscar (ej: perro, tocineta, jugo)"              class="w-full text-sm px-3 py-2 rounded-xl border outline-none focus:ring focus:ring-neutral-200" />       <div id="chips" class="mt-2 flex gap-2 overflow-x-auto no-scrollbar py-2"></div>     </div>   </header>    <!-- Toast -->   <div id="toastCopied"        class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-black text-white text-sm px-3 py-1.5 rounded-lg shadow">     Enlace copiado ✅   </div>    <!-- Promos -->   <section class="max-w-3xl mx-auto px-4 pt-6">     <h2 class="text-lg font-semibold mb-3">Promociones</h2>     <div id="promos" class="grid gap-3"></div>   </section>    <!-- Contenido -->   <main id="content" class="max-w-3xl mx-auto px-4 py-6"></main>   <script type="module">     // =========================     // PREVENT CACHE USING JS     // =========================     if ('serviceWorker' in navigator) {        navigator.serviceWorker.getRegistrations().then(function(registrations) {           for (let registration of registrations) {               registration.unregister()           }        });     }     // =========================     const SOCIAL_LINKS = {        tiktok: {          "perro-venezolano": "https://www.tiktok.com/t/ZThjswgAm/",          "hamb-sencilla": "https://www.tiktok.com/t/ZThjGh7AC/"        },        instagram: {          "perro-venezolano": "https://www.instagram.com/reel/DTYCK-gDseb/?igsh=MTJ0amZuaTY0MWF6OA==",          "hamb-sencilla": "https://www.instagram.com/reel/DTYEnb0Di_h/?igsh=MTdpZGZ5ZnNibnNqaQ==".code continues
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pakeperro — Menú</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Favicon (usa tu imagen local) -->
+  <link rel="icon" type="image/jpeg" href="IMG_2292.JPG" />
+  <link rel="apple-touch-icon" href="IMG_2292.JPG" />
+
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Respaldo: evita que el título quede tapado al hacer scroll a secciones */
+    section[id^="sec-"] { scroll-margin-top: 96px; }
+  </style>
+</head>
+
+<body class="bg-white text-neutral-900">
+
+  <!-- Header -->
+  <header id="siteHeader" class="sticky top-0 z-40 backdrop-blur bg-white/80 border-b">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+      <!-- Logo -->
+      <img src="IMG_2292.JPG" alt="Logo Pakeperro" class="w-20 h-20 rounded-xl object-cover bg-white border" />
+      <div class="flex-1">
+        <h1 class="text-xl font-bold leading-tight">Pakeperro — Menú</h1>
+        <p class="text-xs text-neutral-500">Rápido, fresco y con mucho sabor</p>
+      </div>
+      <button id="shareBtn" class="px-3 py-1.5 text-sm rounded-xl border hover:bg-neutral-50 active:scale-[.98]">
+        Compartir
+      </button>
+    </div>
+
+    <!-- Search + chips -->
+    <div class="max-w-3xl mx-auto px-4 pb-3">
+      <input id="searchInput" type="text"
+             placeholder="Buscar (ej: perro, tocineta, jugo)"
+             class="w-full text-sm px-3 py-2 rounded-xl border outline-none focus:ring focus:ring-neutral-200" />
+      <div id="chips" class="mt-2 flex gap-2 overflow-x-auto no-scrollbar py-2"></div>
+    </div>
+  </header>
+
+  <!-- Toast -->
+  <div id="toastCopied"
+       class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-black text-white text-sm px-3 py-1.5 rounded-lg shadow">
+    Enlace copiado ✅
+  </div>
+
+  <!-- Promos -->
+  <section class="max-w-3xl mx-auto px-4 pt-6">
+    <h2 class="text-lg font-semibold mb-3">Promociones</h2>
+    <div id="promos" class="grid gap-3"></div>
+  </section>
+
+  <!-- Contenido -->
+  <main id="content" class="max-w-3xl mx-auto px-4 py-6"></main>
+
+  <script type="module">
+    // =========================
+    //   LINKS SOCIALES — EDITA SOLO AQUÍ
+    // =========================
+    // Clave = item.id del MENU. Cambias links aquí y listo.
+    const SOCIAL_LINKS = {
+      tiktok: {
+        "perro-venezolano": "https://www.tiktok.com/t/ZThjswgAm/",
+        "hamb-sencilla": "https://www.tiktok.com/t/ZThjGh7AC/"
+      },
+      instagram: {
+        "perro-venezolano": "https://www.instagram.com/reel/DTYCK-gDseb/?igsh=MTJ0amZuaTY0MWF6OA==",
+        "hamb-sencilla": "https://www.instagram.com/reel/DTYEnb0Di_h/?igsh=MTdpZGZ5ZnNibnNqaQ=="
+      }
+    };
+
+    const getSocialLink = (platform, itemId) => (SOCIAL_LINKS?.[platform]?.[itemId] || "").trim();
+
+    // =========================
+    //   DATOS — EDITA AQUÍ
+    // =========================
+
+    // Promos: Miércoles y Jueves (se resalta si hoy coincide)
+    const PROMOS = [
+      {
+        id: "combo-perros-miercoles",
+        day: "Miércoles",
+        weekdayIndex: 3, // 0=Dom,1=Lun,2=Mar,3=Mié,4=Jue,5=Vie,6=Sáb
+        title: "Combo Perros Calientes",
+        description: "2 Perros Calientes Estilo Venezolano + 1 Refresco",
+        price: 10.00
+      },
+      {
+        id: "combo-hamb-jueves",
+        day: "Jueves",
+        weekdayIndex: 4,
+        title: "Combo Hamburguesa Sencilla",
+        description: "1 Hamburguesa Sencilla + 1 Ración de Papas Fritas + 1 Refresco",
+        price: 10.00
+      }
+    ];
+
+    const MENU = [
+      // ——— PERROS CALIENTES ———
+      {
+        id: "perro-venezolano",
+        title: "Perro Caliente Estilo Venezolano",
+        description:
+          "Pan artesanal, salchicha Nathan’s, repollo, cebolla, maíz, tocineta, papitas, tres salsas de la casa y queso amarillo rallado.",
+        price: 5.00,
+        category: "hotdogs"
+      },
+
+      // ——— HAMBURGUESAS ———
+      {
+        id: "hamb-sencilla",
+        title: "Hamburguesa Sencilla",
+        description:
+          "Pan brioche, 2 carnes smashed (mezcla con wagyu), queso americano en cada carne, tocineta, cebolla, repollo, maíz, papitas y salsa de la casa.",
+        price: 10.00,
+        category: "burgers",
+        extras: [
+          { id: "extra-carne", label: "Extra carne", price: 2.50 },
+          { id: "extra-huevo", label: "Huevo", price: 2.50 },
+          { id: "extra-queso", label: "Queso adicional", price: 2.50 },
+          { id: "extra-tocineta", label: "Extra tocineta", price: 2.50 }
+        ],
+        upsell_note: "Por $2.50 cada extra — ¡hazla Especial!"
+      },
+      {
+        id: "hamb-especial",
+        title: "Hamburguesa Especial",
+        description:
+          "Pan brioche, 3 carnes smashed (mezcla con wagyu), 3 quesos, huevo, extra tocineta, cebolla, repollo, maíz, papitas y salsa de la casa.",
+        price: 15.00,
+        category: "burgers"
+      },
+
+      // ——— COMPLEMENTOS ———
+      { id: "papas-fritas", title: "Papas fritas", description: "Ración clásica.", price: 5.00, category: "sides" },
+      { id: "tequenos", title: "Tequeños (5 unidades)", description: "Crujientes y bien rellenos.", price: 5.00, category: "sides" },
+      { id: "empanaditas", title: "Empanaditas (3 unidades)", description: "Ración de 3.", price: 6.00, category: "sides" },
+      {
+        id: "papas-queso-tocineta",
+        title: "Papas con queso y tocineta",
+        description: "Queso amarillo rallado, salsa de queso y tocineta.",
+        price: 7.00,
+        category: "sides"
+      },
+
+      // ——— BEBIDAS ——— (sin botones de video)
+      { id: "agua", title: "Agua", description: "", price: 1.00, category: "drinks" },
+      { id: "refrescos", title: "Refrescos", description: "", price: 2.50, category: "drinks" },
+      { id: "nestea", title: "Vaso de Nestea", description: "", price: 3.00, category: "drinks" },
+
+      // ——— POSTRES ———
+      {
+        id: "tetas-venezolanas",
+        title: "Tetas venezolanas",
+        description:
+          "Helado artesanal en bolsita plástica anudada (forma cónica), a base de leche o jugos; clásico de la calle venezolana. Sabores ejemplo: Toddy, ron con pasas, coco, colita, batibati, colita.",
+        price: 5.00,
+        category: "desserts"
+      },
+      { id: "tres-leches", title: "Tres leches (porción)", description: "Clásico, húmedo y cremoso.", price: 7.00, category: "desserts" },
+      {
+        id: "beso-angel",
+        title: "Torta Beso de Ángel (porción)",
+        description: "Torta tres leches con capa de quesillo en el centro y bizcocho superior. Suave, cremosa y con contraste perfecto.",
+        price: 8.00,
+        category: "desserts"
+      },
+      { id: "torta-chocolate", title: "Torta de chocolate (porción)", description: "Cacao intenso.", price: 7.00, category: "desserts" },
+      { id: "marquesa", title: "Marquesa (porción)", description: "Galleta y crema fría estilo casero.", price: 7.00, category: "desserts" }
+    ];
+
+    const CATEGORIES = [
+      { id: "all", label: "Todo" },
+      { id: "hotdogs", label: "Perros Calientes" },
+      { id: "burgers", label: "Hamburguesas" },
+      { id: "sides", label: "Complementos" },
+      { id: "drinks", label: "Bebidas" },
+      { id: "desserts", label: "Postres" }
+    ];
+
+    // =========================
+    //   UTILIDADES
+    // =========================
+    const $ = s => document.querySelector(s);
+    const money = n => `$${Number(n).toFixed(2)}`;
+
+    // =========================
+    //   PROMOS RENDER
+    // =========================
+    const promosWrap = $("#promos");
+    const todayIndex = new Date().getDay();
+
+    function renderPromos() {
+      promosWrap.innerHTML = PROMOS.map(p => {
+        const active = p.weekdayIndex === todayIndex;
+        return `
+          <article class="rounded-2xl border p-4 flex items-start gap-3 ${active ? 'bg-yellow-50' : ''}">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-xs px-2 py-0.5 rounded-full border">${p.day}</span>
+                ${active ? '<span class="text-[11px] px-2 py-0.5 rounded-full bg-black text-white">HOY</span>' : ''}
+              </div>
+              <h3 class="mt-2 text-base font-bold leading-tight">${p.title}</h3>
+              <p class="text-sm text-neutral-600 mt-1">${p.description}</p>
+            </div>
+            <div class="text-right shrink-0">
+              <div class="text-base font-semibold">${money(p.price)}</div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    // =========================
+    //   MENÚ / CHIPS / SEARCH
+    // =========================
+    let currentCat = "all";
+    let query = "";
+
+    const chips = $("#chips");
+    chips.innerHTML = CATEGORIES.map(c => `
+      <button data-cat="${c.id}"
+              class="px-3 py-1.5 text-xs rounded-full border whitespace-nowrap hover:bg-neutral-50">
+        ${c.label}
+      </button>
+    `).join("");
+
+    function scrollWithHeaderOffset(targetEl) {
+      if (!targetEl) return;
+      const header = document.getElementById("siteHeader");
+      const headerHeight = header ? header.offsetHeight : 96;
+      const rect = targetEl.getBoundingClientRect();
+      const absoluteTop = rect.top + window.pageYOffset;
+      const offset = 8;
+      const targetY = Math.max(absoluteTop - headerHeight - offset, 0);
+      window.scrollTo({ top: targetY, behavior: "smooth" });
+    }
+
+    chips.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-cat]");
+      if (!btn) return;
+      currentCat = btn.getAttribute("data-cat");
+      renderMenu();
+
+      if (currentCat !== "all") {
+        const el = document.getElementById(`sec-${currentCat}`);
+        scrollWithHeaderOffset(el);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+
+    const content = $("#content");
+
+    function getFiltered() {
+      const q = query.trim().toLowerCase();
+      return MENU.filter(m => {
+        const inCat = currentCat === "all" || m.category === currentCat;
+        const inText = !q ||
+          m.title.toLowerCase().includes(q) ||
+          (m.description || "").toLowerCase().includes(q);
+        return inCat && inText;
+      });
+    }
+
+    function groupByCategory(list) {
+      const map = {};
+      for (const item of list) {
+        map[item.category] = map[item.category] || [];
+        map[item.category].push(item);
+      }
+      const order = CATEGORIES.map(c => c.id).filter(id => id !== "all");
+      return order.map(id => ({ id, items: map[id] || [] }));
+    }
+
+    function renderMenu() {
+      const grouped = groupByCategory(getFiltered());
+
+      content.innerHTML = grouped.map(group => `
+        <section id="sec-${group.id}" class="mb-8">
+          <h2 class="text-lg font-semibold mb-3">
+            ${CATEGORIES.find(c => c.id === group.id)?.label || group.id}
+          </h2>
+          <div class="grid gap-3">
+            ${group.items.length === 0
+              ? `<p class="text-sm text-neutral-500">No hay items para esta búsqueda.</p>`
+              : group.items.map(item => {
+                  const tk = getSocialLink("tiktok", item.id);
+                  const ig = getSocialLink("instagram", item.id);
+
+                  const hasAny = Boolean(tk || ig);
+
+                  const tkDisabled = !tk ? "opacity-50 cursor-not-allowed" : "";
+                  const igDisabled = !ig ? "opacity-50 cursor-not-allowed" : "";
+
+                  return `
+                    <article class="rounded-2xl border p-4 flex gap-4">
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-start justify-between gap-3">
+                          <h3 class="text-base font-bold leading-tight">${item.title}</h3>
+                          <div class="text-right shrink-0">
+                            <div class="text-base font-semibold">${money(item.price)}</div>
+                          </div>
+                        </div>
+                        <p class="text-sm text-neutral-600 mt-1">${item.description || ""}</p>
+
+                        ${Array.isArray(item.extras) ? `
+                          <div class="mt-2 text-xs text-neutral-600">
+                            <span class="font-semibold">Extras (+$2.50 c/u):</span>
+                            ${item.extras.map(x => x.label).join(" • ")}
+                            ${item.upsell_note ? `<div class="mt-1 text-neutral-500">${item.upsell_note}</div>` : ``}
+                          </div>
+                        ` : ``}
+
+                        ${item.category !== "drinks" ? `
+                          <div class="mt-3 flex flex-col gap-2">
+                            <div class="flex gap-2">
+                              <a class="px-3 py-1.5 text-xs rounded-lg border hover:bg-neutral-50 ${tkDisabled}"
+                                 ${tk ? `href="${tk}" target="_blank" rel="noreferrer noopener"` : `href="#" aria-disabled="true" onclick="return false;"`}
+                              >TikTok</a>
+
+                              <a class="px-3 py-1.5 text-xs rounded-lg border hover:bg-neutral-50 ${igDisabled}"
+                                 ${ig ? `href="${ig}" target="_blank" rel="noreferrer noopener"` : `href="#" aria-disabled="true" onclick="return false;"`}
+                              >Instagram</a>
+                            </div>
+
+                            ${!hasAny ? `
+                              <div class="text-[11px] text-neutral-500 leading-snug">
+                                Falta link de TikTok/Instagram para: <span class="font-semibold">${item.id}</span>
+                              </div>
+                            ` : ``}
+                          </div>
+                        ` : ``}
+                      </div>
+                    </article>
+                  `;
+                }).join("")}
+          </div>
+        </section>
+      `).join("");
+    }
+
+    // Búsqueda
+    const searchInput = $("#searchInput");
+    searchInput.addEventListener("input", (e) => {
+      query = e.target.value || "";
+      renderMenu();
+    });
+
+    // Compartir
+    const toast = $("#toastCopied");
+    function showToast() {
+      toast.classList.remove("hidden");
+      setTimeout(() => toast.classList.add("hidden"), 1500);
+    }
+
+    $("#shareBtn").addEventListener("click", async () => {
+      const url = window.location.href;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: "Pakeperro — Menú", text: "Mira el menú de Pakeperro", url });
+        } else {
+          await navigator.clipboard.writeText(url);
+          showToast();
+        }
+      } catch {
+        await navigator.clipboard.writeText(url);
+        showToast();
+      }
+    });
+
+    // Render inicial
+    renderPromos();
+    renderMenu();
+  </script>
+</body>
+</html>
